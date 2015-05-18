@@ -3,7 +3,6 @@ package merge
 import (
 	"bufio"
 	"bytes"
-	// "fmt"
 	"strings"
 )
 
@@ -16,13 +15,16 @@ type Merge struct {
 	Values []*Value
 }
 
+var SPLIT = ":"
+
 //Merge the old values(src) into the new values (dst)
-func SimpleMerge(src string, dst string) (result string, err error) {
+func SimpleMerge(src string, dst string, split string) (result string, err error) {
+	SPLIT = split
 	reader := bytes.NewBufferString(src)
 	scanner := bufio.NewScanner(reader)
 	merge := &Merge{}
 	for scanner.Scan() {
-		srcParts := strings.Split(scanner.Text(), ":")
+		srcParts := strings.Split(scanner.Text(), SPLIT)
 		merge.AddValues(srcParts)
 	}
 	if err = scanner.Err(); err != nil {
@@ -50,7 +52,7 @@ func (s *Merge) AddValues(parts []string) {
 
 		buffer.WriteString(p)
 		if size > cnt {
-			buffer.WriteString(":")
+			buffer.WriteString(SPLIT)
 		}
 		cnt++
 	}
@@ -65,7 +67,7 @@ func (s *Merge) MergeInto(dst string) (string, error) {
 	scanner := bufio.NewScanner(reader)
 	merge := &Merge{}
 	for scanner.Scan() {
-		dstParts := strings.Split(scanner.Text(), ":")
+		dstParts := strings.Split(scanner.Text(), SPLIT)
 		merge.AddValues(dstParts)
 	}
 	if err := scanner.Err(); err != nil {
@@ -78,7 +80,7 @@ func (s *Merge) MergeInto(dst string) (string, error) {
 		result.WriteString(v.Key)
 		if len(v.Value) > 0 {
 			// fmt.Println("FOUND MATCH===>", v.Key, v.Value)
-			result.WriteString(":")
+			result.WriteString(SPLIT)
 			result.WriteString(v.Value)
 
 		}
