@@ -3,6 +3,7 @@ package merge
 import (
 	"bufio"
 	"bytes"
+	// "fmt"
 	"strings"
 )
 
@@ -31,7 +32,6 @@ func SimpleMerge(src string, dst string, split string) (result string, err error
 		return result, err
 	}
 	result, err = merge.MergeInto(dst)
-
 	return
 }
 
@@ -46,18 +46,22 @@ func (s *Merge) AddValues(parts []string) {
 	}
 
 	var buffer bytes.Buffer
-	cnt := 2
-	size := len(parts)
-	for _, p := range parts[1:] {
-
-		buffer.WriteString(p)
-		if size > cnt {
+	size := len(parts) - 1
+	for i, p := range parts {
+		if i != 0 { // don't write the key twice
+			buffer.WriteString(p)
+		}
+		if i < size { //ignore the last one
 			buffer.WriteString(SPLIT)
 		}
-		cnt++
+
 	}
-	value.Value = buffer.String()
+	r := buffer.String()
+	if len(r) > 0 {
+		value.Value = r
+	}
 	s.Values = append(s.Values, &value)
+
 }
 
 //Merge values from the old values map into the new string.
@@ -76,25 +80,47 @@ func (s *Merge) MergeInto(dst string) (string, error) {
 
 	merge = Combine(s, merge)
 	var result bytes.Buffer
+	cnt := 1
+	size := len(merge.Values)
 	for _, v := range merge.Values {
 		result.WriteString(v.Key)
 		if len(v.Value) > 0 {
 			// fmt.Println("FOUND MATCH===>", v.Key, v.Value)
-			result.WriteString(SPLIT)
 			result.WriteString(v.Value)
 
 		}
-		result.WriteString("\n")
+		if cnt < size {
+			result.WriteString("\n")
+		}
+		cnt++
 	}
 	return result.String(), nil
 }
 
 //Combine our results and return the result
 func Combine(src *Merge, dst *Merge) *Merge {
+	srcCnt := make(map[string]int, 0)
+
 	for _, s := range src.Values {
+
+		_, ok := srcCnt[s.Key]
+		if !ok {
+			srcCnt[s.Key] = 1
+		} else {
+			srcCnt[s.Key]++
+		}
+		dstCnt := make(map[string]int, 0)
 		for _, d := range dst.Values {
 			if s.Key == d.Key {
-				d.Value = s.Value
+				_, ok := dstCnt[s.Key]
+				if !ok {
+					dstCnt[s.Key] = 1
+				} else {
+					dstCnt[s.Key]++
+				}
+				if srcCnt[s.Key] == dstCnt[s.Key] {
+					d.Value = s.Value
+				}
 			}
 		}
 	}
