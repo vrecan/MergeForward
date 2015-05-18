@@ -46,18 +46,4 @@ func main() {
 	} else {
 		fmt.Print(result)
 	}
-	// fmt.Println(result)
-	// fmt.Println(string(srcBytes))
-	// result, err := merge.DiffMerge(string(srcBytes), string(dstBytes))
-	// if nil != err {
-
-	// }
-	// finalResult, err := merge.DiffMerge(result, string(dstBytes))
-	// if nil != err {
-
-	// }
-
-	// fmt.Println(finalResult)
-
-	// merge.MarshalToYaml(result, "/tmp/output.yml")
 }
