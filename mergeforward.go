@@ -44,6 +44,7 @@ func main() {
 		fmt.Println("Unable to merge files: ", err)
 		os.Exit(1)
 	} else {
+		//output to stdout
 		fmt.Print(result)
 	}
 }
