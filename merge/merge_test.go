@@ -101,4 +101,26 @@ indexerConfList:
 		So(r, ShouldEqual, dst)
 	})
 
+	Convey("comment block test update", t, func() {
+		src := `//comment block`
+		dst := `//comment`
+
+		r, err := SimpleMerge(src, dst, ":")
+		So(err, ShouldBeNil)
+		So(r, ShouldEqual, dst)
+	})
+	Convey("comment block test update with :", t, func() {
+		src := `something: woo
+		//comment explaining something else
+		something else: "new"`
+		dst := `something: woo
+		something else: "woo"`
+		shouldResult := `something: woo
+		something else: "new"`
+
+		r, err := SimpleMerge(src, dst, ":")
+		So(err, ShouldBeNil)
+		So(r, ShouldEqual, shouldResult)
+	})
+
 }
