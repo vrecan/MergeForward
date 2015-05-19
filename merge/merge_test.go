@@ -93,8 +93,8 @@ indexerConfList:
 	})
 
 	Convey("empty value test", t, func() {
-		src := `something: `
-		dst := `something: `
+		src := `something:`
+		dst := `something:`
 
 		r, err := SimpleMerge(src, dst, ":")
 		So(err, ShouldBeNil)
