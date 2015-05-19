@@ -55,34 +55,34 @@ func TestMerge(t *testing.T) {
 	})
 
 	Convey("Test yaml lists with same object should replace in order", t, func() {
-		src := `!!com.logrhythm.configelements.DispatchConfigMessage
+		src := `!!com.company.configelements.DispatchConfigMessage
 indexerConfList:
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://0.0.0.0:13109
       inputQueueTimeoutSec: 5000
       passthroughQName: tcp://127.0.0.1:13104
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://127.0.0.1:13102
       inputQueueTimeoutSec: 5000
       passthroughQName: "customePass"`
-		dst := `!!com.logrhythm.configelements.DispatchConfigMessage
+		dst := `!!com.company.configelements.DispatchConfigMessage
 indexerConfList:
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://*:13100
       inputQueueTimeoutSec: 5000
       passthroughQName: tcp://127.0.0.1:13104
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://127.0.0.1:13102
       inputQueueTimeoutSec: 5000
       passthroughQName: ""`
 
-		shouldResult := `!!com.logrhythm.configelements.DispatchConfigMessage
+		shouldResult := `!!com.company.configelements.DispatchConfigMessage
 indexerConfList:
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://0.0.0.0:13109
       inputQueueTimeoutSec: 5000
       passthroughQName: tcp://127.0.0.1:13104
-   - !!com.logrhythm.configelements.DispatchConfigMessage$IndexerConfigMessage
+   - !!com.company.configelements.DispatchConfigMessage$IndexerConfigMessage
       inputQueue: tcp://127.0.0.1:13102
       inputQueueTimeoutSec: 5000
       passthroughQName: "customePass"`

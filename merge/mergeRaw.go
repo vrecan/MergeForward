@@ -3,7 +3,6 @@ package merge
 import (
 	"bufio"
 	"bytes"
-	// "fmt"
 	"strings"
 )
 
@@ -85,7 +84,6 @@ func (s *Merge) MergeInto(dst string) (string, error) {
 	for _, v := range merge.Values {
 		result.WriteString(v.Key)
 		if len(v.Value) > 0 {
-			// fmt.Println("FOUND MATCH===>", v.Key, v.Value)
 			result.WriteString(v.Value)
 
 		}

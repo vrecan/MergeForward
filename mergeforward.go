@@ -12,7 +12,7 @@ import (
 
 var src = flag.String("src", "", "Source configuration file. Src values are prefered over dest.")
 var dst = flag.String("dst", "", "Destination configuration file.")
-var split = flag.String("split", ":", "What character we should use to split key value pairs")
+var split = flag.String("split", ":", "Splitter for key value pairs")
 
 type conf interface{}
 
