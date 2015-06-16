@@ -2,14 +2,32 @@ package merge
 
 import (
 	. "github.com/smartystreets/goconvey/convey"
+	c "github.com/vrecan/MergeForward/c"
 	"testing"
 )
 
+var conf c.Conf
+
 func TestMerge(t *testing.T) {
+	Convey("override an exact match", t, func() {
+		conf := c.GetConf("")
+		conf.ConfigOverrides["override"] = ` "value:override:value:value"`
+		d := &Value{Key: "override", Value: `:  "value:value:value:value"`}
+		override(d, conf)
+		So(d.Value, ShouldEqual, `: "value:override:value:value"`)
+	})
+	Convey("override contains match", t, func() {
+		conf := c.GetConf("")
+		conf.ConfigOverrides["override"] = ` "value:override:value:value"`
+		d := &Value{Key: "stuff override stuff", Value: `: "value:value:value:value"`}
+		override(d, conf)
+		So(d.Value, ShouldEqual, `: "value:override:value:value"`)
+	})
 	Convey("Merge simple string", t, func() {
 		src := "yamlString: value"
 		dst := "yamlString: newValue"
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, src)
 	})
@@ -17,7 +35,8 @@ func TestMerge(t *testing.T) {
 	Convey("Merge with = delimiter", t, func() {
 		src := "yamlString= value"
 		dst := "yamlString= newValue"
-		r, err := SimpleMerge(src, dst, "=")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, "=", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, src)
 	})
@@ -38,18 +57,41 @@ func TestMerge(t *testing.T) {
 		other: "other:other:other:other"
 		new: "new:field:woo"
 		`
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
+	Convey("Merge with multiline conf and overrides", t, func() {
+		src := `yamlString : value
+		value : "value:change:value:value"
+		override : "value:value:value:value"
+		`
+		dst := `yamlString : value
+		value : "value:value:value:value"
+		override : "value:value:value:value"
+		new : "new:field:woo"
+		`
 
+		shouldResult := `yamlString : value
+		value : "value:change:value:value"
+		override : "value:override:value:value"
+		new : "new:field:woo"
+		`
+		conf := c.GetConf("")
+		conf.ConfigOverrides["override"] = ` "value:override:value:value"`
+		r, err := SimpleMerge(src, dst, ":", conf)
+		So(err, ShouldBeNil)
+		So(r, ShouldEqual, shouldResult)
+	})
 	Convey("Ignore strings with no delimiter", t, func() {
 		src := "!!YAMLthingy.com.company.objectname"
 		dst := `!!YAMLthingy.com.company.objectname
 		somethingElse: "value"
 		`
 
-		r, err := SimpleMerge(src, dst, "=")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, "=", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -86,8 +128,8 @@ indexerConfList:
       inputQueue: tcp://127.0.0.1:13102
       inputQueueTimeoutSec: 5000
       passthroughQName: "customePass"`
-
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
@@ -95,8 +137,8 @@ indexerConfList:
 	Convey("empty value test", t, func() {
 		src := `something:`
 		dst := `something:`
-
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -104,8 +146,8 @@ indexerConfList:
 	Convey("comment block test update", t, func() {
 		src := `//comment block`
 		dst := `//comment`
-
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -117,8 +159,8 @@ indexerConfList:
 		something else: "woo"`
 		shouldResult := `something: woo
 		something else: "new"`
-
-		r, err := SimpleMerge(src, dst, ":")
+		conf := c.GetConf("")
+		r, err := SimpleMerge(src, dst, ":", conf)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})

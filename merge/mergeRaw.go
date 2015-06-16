@@ -3,6 +3,7 @@ package merge
 import (
 	"bufio"
 	"bytes"
+	c "github.com/vrecan/MergeForward/c"
 	"strings"
 )
 
@@ -13,16 +14,17 @@ type Value struct {
 
 type Merge struct {
 	Values []*Value
+	conf   c.Conf
 }
 
 var SPLIT = ":"
 
 //Merge the old values(src) into the new values (dst)
-func SimpleMerge(src string, dst string, split string) (result string, err error) {
+func SimpleMerge(src string, dst string, split string, conf c.Conf) (result string, err error) {
 	SPLIT = split
 	reader := bytes.NewBufferString(src)
 	scanner := bufio.NewScanner(reader)
-	merge := &Merge{}
+	merge := &Merge{conf: conf}
 	for scanner.Scan() {
 		srcParts := strings.Split(scanner.Text(), SPLIT)
 		merge.AddValues(srcParts)
@@ -120,7 +122,21 @@ func Combine(src *Merge, dst *Merge) *Merge {
 					d.Value = s.Value
 				}
 			}
+			override(d, src.conf)
 		}
 	}
 	return dst
+}
+
+// override the value if its key is in the conf.ConfigOverrides
+func override(d *Value, conf c.Conf) {
+	for k, v := range conf.ConfigOverrides {
+		if strings.Contains(d.Key, k) {
+			var buffer bytes.Buffer
+			buffer.WriteString(string([]rune(d.Value)[0]))
+			buffer.WriteString(v)
+			d.Value = buffer.String()
+			return
+		}
+	}
 }
