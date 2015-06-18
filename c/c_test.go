@@ -14,7 +14,8 @@ func TestMerge(t *testing.T) {
 baz="fubar"
 boo='bar'
 fu=bar=bar
-space= a`)
+space= a
+data= D:\data`)
 		c := readFromBuffer(buffer.Bytes())
 		So(c.ConfigOverrides, ShouldNotBeEmpty)
 		So(c.ConfigOverrides["foo"], ShouldEqual, "bar")
@@ -22,6 +23,7 @@ space= a`)
 		So(c.ConfigOverrides["boo"], ShouldEqual, `'bar'`)
 		So(c.ConfigOverrides["fu"], ShouldEqual, `bar=bar`)
 		So(c.ConfigOverrides["space"], ShouldEqual, ` a`)
+		So(c.ConfigOverrides["data"], ShouldEqual, ` D:\data`)
 	})
 	Convey("Read from invalid file", t, func() {
 		var buffer bytes.Buffer

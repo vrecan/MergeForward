@@ -23,6 +23,13 @@ func TestMerge(t *testing.T) {
 		override(d, conf)
 		So(d.Value, ShouldEqual, `: "value:override:value:value"`)
 	})
+	Convey("override contains match but no separator on matched line", t, func() {
+		conf := c.GetConf("")
+		conf.ConfigOverrides["data"] = ` D:\data`
+		d := &Value{Key: "   data", Value: ``}
+		override(d, conf)
+		So(d.Value, ShouldEqual, ``)
+	})
 	Convey("Merge simple string", t, func() {
 		src := "yamlString: value"
 		dst := "yamlString: newValue"

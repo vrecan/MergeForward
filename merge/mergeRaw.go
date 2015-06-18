@@ -131,7 +131,7 @@ func Combine(src *Merge, dst *Merge) *Merge {
 // override the value if its key is in the conf.ConfigOverrides
 func override(d *Value, conf c.Conf) {
 	for k, v := range conf.ConfigOverrides {
-		if strings.Contains(d.Key, k) {
+		if strings.Contains(d.Key, k) && len(d.Value) != 0 {
 			var buffer bytes.Buffer
 			buffer.WriteString(string([]rune(d.Value)[0]))
 			buffer.WriteString(v)
