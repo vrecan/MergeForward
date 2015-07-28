@@ -5,6 +5,8 @@ import (
 	"bytes"
 	c "github.com/vrecan/MergeForward/c"
 	"strings"
+	"log"
+	"os"
 )
 
 type Value struct {
@@ -20,10 +22,12 @@ type Merge struct {
 var SPLIT = ":"
 
 //Merge the old values(src) into the new values (dst)
-func SimpleMerge(src string, dst string, split string, conf c.Conf) (result string, err error) {
+func SimpleMerge(src string, dst string, split string, conf c.Conf, logFile *os.File) (result string, err error) {
+	log.SetOutput(logFile)
 	SPLIT = split
 	reader := bytes.NewBufferString(src)
 	scanner := bufio.NewScanner(reader)
+
 	merge := &Merge{conf: conf}
 	for scanner.Scan() {
 		srcParts := strings.Split(scanner.Text(), SPLIT)
@@ -118,7 +122,9 @@ func Combine(src *Merge, dst *Merge) *Merge {
 				} else {
 					dstCnt[s.Key]++
 				}
-				if srcCnt[s.Key] == dstCnt[s.Key] {
+				if srcCnt[s.Key] == dstCnt[s.Key] && s.Value != d.Value {
+					log.Println("Replacing new {", d.Key + d.Value, "}")
+					log.Println("with the old  {", s.Key + s.Value, "}")
 					d.Value = s.Value
 				}
 			}
