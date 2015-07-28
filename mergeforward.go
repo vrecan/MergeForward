@@ -56,9 +56,11 @@ func main() {
 
 	result, err := merge.SimpleMerge(string(srcBytes), string(dstBytes), *split, conf, logFile)
 	if nil != err {
+		fmt.Println("Unable to merge files: ", err)
 		log.Println("Unable to merge files: ", err)
 		os.Exit(1)
 	} else {
+		fmt.Println(result)
 		log.Println(result)
 	}
 }
