@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"os"
 	"log"
+	"io"
+
 )
 
 var src = flag.String("src", "", "Source configuration file. Src values are prefered over dest.")
@@ -29,38 +31,31 @@ func main() {
 		fmt.Println("Error making log file: " + *outputdir + string(os.PathSeparator) + "MergeForward.log")
 	}
 	defer logFile.Close()
-
-	log.SetOutput(logFile)
+	
+	dualLogger := log.New(io.MultiWriter(logFile,os.Stdout), "", 0)
 
 	if len(*src) == 0 {
-		log.Println("No source file.")
-		os.Exit(1)
+		dualLogger.Fatalln("No source file")
 	}
 	if len(*dst) == 0 {
-		log.Println("No destination file.")
-		os.Exit(1)
+		dualLogger.Fatalln("No destination file.")
 	}
 	conf := c.GetConf(*config)
 
 	srcBytes, err := ioutil.ReadFile(*src)
 	if nil != err {
-		log.Println("Unable to read src file: ", err)
-		os.Exit(1)
+		dualLogger.Fatalln("Unable to read src file: ", err)
 	}
 
 	dstBytes, err := ioutil.ReadFile(*dst)
 	if nil != err {
-		log.Println("Unable to read destination file: ", err)
-		os.Exit(1)
+		dualLogger.Fatalln("Unable to read destination file: ", err)
 	}
 
 	result, err := merge.SimpleMerge(string(srcBytes), string(dstBytes), *split, conf, logFile)
 	if nil != err {
-		fmt.Println("Unable to merge files: ", err)
-		log.Println("Unable to merge files: ", err)
-		os.Exit(1)
+		dualLogger.Fatalln("Unable to merge files: ", err)
 	} else {
-		fmt.Println(result)
-		log.Println(result)
+		dualLogger.Println(result)
 	}
 }
