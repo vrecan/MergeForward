@@ -26,6 +26,8 @@ func main() {
 
 	fmt.Println("Log file will be created at", *outputdir + string(os.PathSeparator) + "MergeForward.log")
 
+	os.MkdirAll(*outputdir, 0666)
+
 	_ = os.Remove(*outputdir + "MergeForward.log")
 	logFile, err := os.OpenFile(*outputdir + string(os.PathSeparator) + "MergeForward.log", os.O_RDWR | os.O_CREATE, 0666)
 	if err != nil {
