@@ -27,8 +27,8 @@ func SimpleMerge(src string, dst string, split string, conf c.Conf, logFile *os.
 	SPLIT = split
 	reader := bytes.NewBufferString(src)
 	scanner := bufio.NewScanner(reader)
-
 	merge := &Merge{conf: conf}
+	
 	for scanner.Scan() {
 		srcParts := strings.Split(scanner.Text(), SPLIT)
 		merge.AddValues(srcParts)
