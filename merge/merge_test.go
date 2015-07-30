@@ -34,7 +34,7 @@ func TestMerge(t *testing.T) {
 		src := "yamlString: value"
 		dst := "yamlString: newValue"
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, src)
 	})
@@ -43,7 +43,7 @@ func TestMerge(t *testing.T) {
 		src := "yamlString= value"
 		dst := "yamlString= newValue"
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, "=", conf)
+		r, err := SimpleMerge(src, dst, "=", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, src)
 	})
@@ -65,7 +65,7 @@ func TestMerge(t *testing.T) {
 		new: "new:field:woo"
 		`
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
@@ -87,7 +87,7 @@ func TestMerge(t *testing.T) {
 		`
 		conf := c.GetConf("")
 		conf.ConfigOverrides["override"] = ` "value:override:value:value"`
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
@@ -98,7 +98,7 @@ func TestMerge(t *testing.T) {
 		`
 
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, "=", conf)
+		r, err := SimpleMerge(src, dst, "=", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -136,7 +136,7 @@ indexerConfList:
       inputQueueTimeoutSec: 5000
       passthroughQName: "customePass"`
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
@@ -145,7 +145,7 @@ indexerConfList:
 		src := `something:`
 		dst := `something:`
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -154,7 +154,7 @@ indexerConfList:
 		src := `//comment block`
 		dst := `//comment`
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, dst)
 	})
@@ -167,7 +167,7 @@ indexerConfList:
 		shouldResult := `something: woo
 		something else: "new"`
 		conf := c.GetConf("")
-		r, err := SimpleMerge(src, dst, ":", conf)
+		r, err := SimpleMerge(src, dst, ":", conf, nil)
 		So(err, ShouldBeNil)
 		So(r, ShouldEqual, shouldResult)
 	})
