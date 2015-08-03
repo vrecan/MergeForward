@@ -24,8 +24,6 @@ type conf interface{}
 func main() {
 	flag.Parse()
 
-	fmt.Println("Log file will be created at", *outputdir + string(os.PathSeparator) + "MergeForward.log")
-
 	os.MkdirAll(*outputdir, 0666)
 
 	_ = os.Remove(*outputdir + "MergeForward.log")
@@ -59,6 +57,7 @@ func main() {
 	if nil != err {
 		log.Fatalln("Unable to merge files: ", err)
 	} else {
+		fmt.Println(result)
 		log.Println(result)
 	}
 }
