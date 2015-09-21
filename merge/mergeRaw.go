@@ -5,8 +5,7 @@ import (
 	"bytes"
 	c "github.com/vrecan/MergeForward/c"
 	"strings"
-	"log"
-	"os"
+    "github.com/cihub/seelog"
 )
 
 type Value struct {
@@ -19,12 +18,14 @@ type Merge struct {
 	conf   c.Conf
 }
 
+var logger seelog.LoggerInterface
 var SPLIT = ":"
 
 //Merge the old values(src) into the new values (dst)
-func SimpleMerge(src string, dst string, split string, conf c.Conf, logFile *os.File) (result string, err error) {
-	
-	log.SetOutput(logFile)
+func SimpleMerge(src string, dst string, split string, conf c.Conf, seelogLogger seelog.LoggerInterface) (result string, err error) {
+
+    logger = seelogLogger
+
 	SPLIT = split
 	reader := bytes.NewBufferString(src)
 	scanner := bufio.NewScanner(reader)
@@ -124,8 +125,8 @@ func Combine(src *Merge, dst *Merge) *Merge {
 					dstCnt[s.Key]++
 				}
 				if srcCnt[s.Key] == dstCnt[s.Key] && s.Value != d.Value {
-					log.Println("Replacing new {", d.Key + d.Value, "}")
-					log.Println("with the old  {", s.Key + s.Value, "}")
+					logger.Info("Replacing new {", d.Key + d.Value, "}")
+					logger.Info("with the old  {", s.Key + s.Value, "}")
 					d.Value = s.Value
 				}
 			}
