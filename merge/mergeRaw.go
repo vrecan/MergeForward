@@ -5,7 +5,7 @@ import (
 	"bytes"
 	c "github.com/vrecan/MergeForward/c"
 	"strings"
-    "github.com/cihub/seelog"
+	"github.com/cihub/seelog"
 )
 
 type Value struct {
@@ -24,7 +24,7 @@ var SPLIT = ":"
 //Merge the old values(src) into the new values (dst)
 func SimpleMerge(src string, dst string, split string, conf c.Conf, seelogLogger seelog.LoggerInterface) (result string, err error) {
 
-    logger = seelogLogger
+	logger = seelogLogger
 
 	SPLIT = split
 	reader := bytes.NewBufferString(src)
