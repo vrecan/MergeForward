@@ -18,7 +18,6 @@ var src = flag.String("src", "", "Source configuration file. Src values are pref
 var dst = flag.String("dst", "", "Destination configuration file.")
 var split = flag.String("split", ":", "Splitter for key value pairs")
 var config = flag.String("config", "./c.ini", "MergeForward configuration ini file")
-var outputdir = flag.String("outputdir", ".", "The output directory of the log file")
 
 type conf interface{}
 
@@ -33,37 +32,31 @@ func main() {
 	fmt.Println(currentDirectory)
 
 	logger, err := seelog.LoggerFromConfigAsString(
-		"<seelog type=\"asynctimer\" asyncinterval=\"1000000\">" +
-			"<outputs formatid=\"all\">" +
-				"<filter levels=\"info\" formatid=\"fmtinfo\">" +
-					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
-				"</filter>" +
-				"<filter levels=\"warn\" formatid=\"fmtwarn\">" +
-					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
-				"</filter>" +
-				"<filter levels=\"error,critical\" formatid=\"fmterror\">" +
-					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
-				"</filter>" +
-			"</outputs>" +
-			"<formats>" +
-				"<format id=\"fmtinfo\" format=\"%EscM(32)[%Level]%EscM(0) [%Date %Time] [%File] %Msg%n\"/>" +
-				"<format id=\"fmterror\" format=\"%EscM(31)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n\"/>" +
-				"<format id=\"fmtwarn\" format=\"%EscM(33)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n\"/>" +
-				"<format id=\"all\" format=\"%EscM(2)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n\"/>" +
-			"</formats>" +
-		"</seelog>")
+		`<seelog type="asynctimer" asyncinterval="1000000">` +
+			`<outputs formatid="all">` +
+				`<filter levels="info" formatid="fmtinfo">` +
+					`<console/>` +
+					`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+				`</filter>` +
+				`<filter levels="warn" formatid="fmtwarn">` +
+					`<console/>` +
+					`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+				`</filter>` +
+				`<filter levels="error,critical" formatid="fmterror">` +
+					`<console/>` +
+					`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+				`</filter>` +
+			`</outputs>` +
+			`<formats>` +
+				`<format id="fmtinfo" format="%EscM(32)[%Level]%EscM(0) [%Date %Time] [%File] %Msg%n"/>` +
+				`<format id="fmterror" format="%EscM(31)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+				`<format id="fmtwarn" format="%EscM(33)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+				`<format id="all" format="%EscM(2)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+			`</formats>` +
+		`</seelog>`)
 
 	flag.Parse()
 
-	os.MkdirAll(*outputdir, 0666)
-
-	_ = os.Remove(*outputdir + "MergeForward.log")
-	if err != nil {
-		fmt.Println("Error making log file:", *outputdir + string(os.PathSeparator) + "MergeForward.log")
-	}
 	defer logger.Close()
 
 	if len(*src) == 0 {
@@ -74,6 +67,9 @@ func main() {
 		logger.Critical("No destination file.")
 		os.Exit(1)
 	}
+
+    logger.Info("Merging ", *src, " into ", *dst, "...")
+
 	conf := c.GetConf(*config)
 
 	srcBytes, err := ioutil.ReadFile(*src)
@@ -94,6 +90,6 @@ func main() {
 		os.Exit(1)
 	} else {
 		fmt.Println(result)
-		logger.Info("Final file output:\n" + result)
+		logger.Info("Final file output:\n" + result + "\n")
 	}
 }
