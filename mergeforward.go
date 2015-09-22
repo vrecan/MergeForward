@@ -37,15 +37,15 @@ func main() {
 			"<outputs formatid=\"all\">" +
 				"<filter levels=\"info\" formatid=\"fmtinfo\">" +
 					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
+					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
 				"</filter>" +
 				"<filter levels=\"warn\" formatid=\"fmtwarn\">" +
 					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
+					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
 				"</filter>" +
 				"<filter levels=\"error,critical\" formatid=\"fmterror\">" +
 					"<console/>" +
-					"<rollingfile type=\"size\" filename=\"MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
+					"<rollingfile type=\"size\" filename=\"/var/log/persistent/MergeForward.log\" maxsize=\"20000000\" maxrolls=\"5\" />" +
 				"</filter>" +
 			"</outputs>" +
 			"<formats>" +
