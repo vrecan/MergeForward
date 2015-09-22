@@ -16,26 +16,26 @@ func TestMerge(t *testing.T) {
 
 		logger, err := seelog.LoggerFromConfigAsString(
 			`<seelog type="asynctimer" asyncinterval="1000000">` +
-			`<outputs formatid="all">` +
-			`<filter levels="info" formatid="fmtinfo">` +
-			`<console/>` +
-			`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
-			`</filter>` +
-			`<filter levels="warn" formatid="fmtwarn">` +
-			`<console/>` +
-			`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
-			`</filter>` +
-			`<filter levels="error,critical" formatid="fmterror">` +
-			`<console/>` +
-			`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
-			`</filter>` +
-			`</outputs>` +
-			`<formats>` +
-			`<format id="fmtinfo" format="%EscM(32)[%Level]%EscM(0) [%Date %Time] [%File] %Msg%n"/>` +
-			`<format id="fmterror" format="%EscM(31)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
-			`<format id="fmtwarn" format="%EscM(33)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
-			`<format id="all" format="%EscM(2)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
-			`</formats>` +
+				`<outputs formatid="all">` +
+					`<filter levels="info" formatid="fmtinfo">` +
+						`<console/>` +
+						`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+					`</filter>` +
+					`<filter levels="warn" formatid="fmtwarn">` +
+						`<console/>` +
+						`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+					`</filter>` +
+					`<filter levels="error,critical" formatid="fmterror">` +
+						`<console/>` +
+						`<rollingfile type="size" filename="/var/log/persistent/MergeForward.log" maxsize="20000000" maxrolls="5" />` +
+					`</filter>` +
+				`</outputs>` +
+				`<formats>` +
+					`<format id="fmtinfo" format="%EscM(32)[%Level]%EscM(0) [%Date %Time] [%File] %Msg%n"/>` +
+					`<format id="fmterror" format="%EscM(31)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+					`<format id="fmtwarn" format="%EscM(33)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+					`<format id="all" format="%EscM(2)[%LEVEL]%EscM(0) [%Date %Time] [%FuncShort @ %File.%Line] %Msg%n"/>` +
+				`</formats>` +
 			`</seelog>`)
 
 		if err != nil {
