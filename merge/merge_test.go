@@ -42,6 +42,8 @@ func TestMerge(t *testing.T) {
 			log.Fatal(err, "- This error happened while automatically detecting the current directory of mergeforward")
 		}
 
+		defer logger.Close()
+
 		Convey("override an exact match", func() {
 			conf := c.GetConf("")
 			conf.ConfigOverrides["override"] = ` "value:override:value:value"`
