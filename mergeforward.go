@@ -68,7 +68,7 @@ func main() {
 		os.Exit(1)
 	}
 
-    logger.Info("Merging ", *src, " into ", *dst, "...")
+	logger.Info("Merging ", *src, " into ", *dst, "...")
 
 	conf := c.GetConf(*config)
 
